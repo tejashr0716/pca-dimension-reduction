@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PCA Dimension Reduction Pipeline</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">Data preprocessing workspace</p>
+      <h1>Dimensionality Reduction <span>&amp; Data Pipeline</span></h1>
+      <p class="hero-copy">Upload a CSV, clean its numeric features, standardize the data, and explore a PCA-reduced dataset.</p>
+    </section>
+
+    <section class="panel control-panel" aria-labelledby="run-title">
+      <div>
+        <p class="section-label">Input</p>
+        <h2 id="run-title">Run PCA analysis</h2>
+      </div>
+      <form id="analysis-form">
+        <label class="file-picker" for="csv-file">
+          <input id="csv-file" name="file" type="file" accept=".csv,text/csv" required>
+          <span class="file-icon">↑</span>
+          <span><strong>Choose a CSV dataset</strong><small id="file-name">Maximum file size: 50 MB</small></span>
+        </label>
+        <label class="component-field" for="components">
+          PCA components
+          <input id="components" name="components" type="number" min="1" value="10" required>
+        </label>
+        <button id="run-button" type="submit">Run PCA <span>→</span></button>
+      </form>
+      <p id="status" class="status" role="status">Choose a CSV file to begin.</p>
+    </section>
+
+    <section id="results" class="results hidden" aria-live="polite">
+      <div class="section-heading">
+        <div><p class="section-label">Analysis output</p><h2>Pipeline results</h2></div>
+        <a id="download-button" class="download-button" href="#" download>Download reduced CSV ↓</a>
+      </div>
+      <div class="metrics-grid">
+        <article class="metric"><span>Original Features</span><strong id="original-features">—</strong></article>
+        <article class="metric"><span>Reduced Features</span><strong id="reduced-features">—</strong></article>
+        <article class="metric"><span>Variance Retained</span><strong id="variance-retained">—</strong></article>
+        <article class="metric"><span>Processing Time</span><strong id="processing-time">—</strong></article>
+        <article class="metric"><span>Rows Received</span><strong id="rows-received">—</strong></article>
+        <article class="metric"><span>Rows Processed</span><strong id="rows-processed">—</strong></article>
+        <article class="metric"><span>Missing Values Removed</span><strong id="missing-values">—</strong></article>
+      </div>
+      <div class="data-grid">
+        <section class="panel chart-panel"><h3>Explained variance by component</h3><canvas id="variance-chart"></canvas></section>
+        <section class="panel preview-panel"><h3>Transformed dataset preview</h3><div class="table-wrap"><table id="preview-table"></table></div></section>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('analysis-form');
+    const fileInput = document.getElementById('csv-file');
+    const fileName = document.getElementById('file-name');
+    const statusText = document.getElementById('status');
+    const runButton = document.getElementById('run-button');
+    const results = document.getElementById('results');
+    let varianceChart;
+
+    fileInput.addEventListener('change', () => {
+      fileName.textContent = fileInput.files[0] ? fileInput.files[0].name : 'Maximum file size: 50 MB';
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) { setStatus('Select a CSV file first.', true); return; }
+      runButton.disabled = true;
+      runButton.innerHTML = 'Processing…';
+      setStatus('Cleaning numeric features and running PCA…');
+      try {
+        const response = await fetch('/api/analyze', { method: 'POST', body: new FormData(form) });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Analysis could not be completed.');
+        renderResults(payload);
+        setStatus('Analysis completed successfully. Your reduced CSV is ready to download.');
+      } catch (error) {
+        results.classList.add('hidden');
+        setStatus(error.message, true);
+      } finally {
+        runButton.disabled = false;
+        runButton.innerHTML = 'Run PCA <span>→</span>';
+      }
+    });
+
+    function setStatus(message, isError = false) {
+      statusText.textContent = message;
+      statusText.classList.toggle('error', isError);
+    }
+
+    function renderResults(data) {
+      const values = {
+        'original-features': data.original_features,
+        'reduced-features': data.reduced_features,
+        'variance-retained': `${data.explained_variance_percent.toFixed(2)}%`,
+        'processing-time': `${data.processing_time_ms.toFixed(2)} ms`,
+        'rows-received': data.original_rows.toLocaleString(),
+        'rows-processed': data.processed_rows.toLocaleString(),
+        'missing-values': data.missing_values_removed.toLocaleString()
+      };
+      Object.entries(values).forEach(([id, value]) => document.getElementById(id).textContent = value);
+      document.getElementById('download-button').href = `/api/download?analysis_id=${encodeURIComponent(data.analysis_id)}`;
+      renderChart(data.variance_by_component);
+      renderPreview(data.preview);
+      results.classList.remove('hidden');
+      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderChart(variance) {
+      if (varianceChart) varianceChart.destroy();
+      varianceChart = new Chart(document.getElementById('variance-chart'), {
+        type: 'bar',
+        data: { labels: variance.map((_, index) => `PC ${index + 1}`), datasets: [{ label: 'Explained variance (%)', data: variance, backgroundColor: '#67e8c6', borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Variance (%)' } }, x: { grid: { display: false } } } }
+      });
+    }
+
+    function renderPreview(rows) {
+      const table = document.getElementById('preview-table');
+      const columns = rows.length ? Object.keys(rows[0]) : [];
+      table.innerHTML = `<thead><tr>${columns.map(column => `<th>${column}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${columns.map(column => `<td>${Number(row[column]).toFixed(5)}</td>`).join('')}</tr>`).join('')}</tbody>`;
+    }
+  </script>
+</body>
+</html>
