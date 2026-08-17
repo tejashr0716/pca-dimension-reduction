@@ -62,29 +62,6 @@ python app.py
 
 Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in a browser. Upload `sample_100d_data.csv`, set the components to `10`, and click **Run PCA**.
 
-## API
-
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| GET | `/` | Opens the web app |
-| POST | `/api/analyze` | Uploads and processes a CSV |
-| GET | `/api/download?analysis_id=VALUE` | Downloads a completed PCA result |
-
-Example request:
-
-```bash
-curl -s -X POST http://127.0.0.1:5000/api/analyze \
-  -F "file=@sample_100d_data.csv" \
-  -F "components=10"
-```
-
-Use the `analysis_id` from that response to download the result:
-
-```bash
-curl -L "http://127.0.0.1:5000/api/download?analysis_id=PASTE_ANALYSIS_ID_HERE" \
-  -o pca_reduced_data.csv
-```
-
 ## Quick checks
 
 ```bash
@@ -99,16 +76,4 @@ With the Flask app running, these should return JSON responses:
 curl -s -X POST http://127.0.0.1:5000/api/analyze -F "file=@sample_100d_data.csv" -F "components=10"
 curl -s -X POST http://127.0.0.1:5000/api/analyze -F "file=@sample_100d_data.csv" -F "components=0"
 curl -s -X POST http://127.0.0.1:5000/api/analyze -F "file=@README.md" -F "components=10"
-```
-
-## Push to GitHub
-
-Run these commands only from the project folder:
-
-```bash
-git add .
-git commit -m "Initial commit - PCA dimensionality reduction pipeline"
-git branch -M main
-git remote add origin https://github.com/tejashr0716/pca-dimension-reduction.git
-git push -u origin main
 ```
