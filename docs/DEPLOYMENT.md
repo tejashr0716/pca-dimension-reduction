@@ -4,7 +4,11 @@
 
 The rebuilt source is published on `main`. The running Flask app is
 [PCA Lab](https://pca-dimension-reduction.onrender.com), hosted by Render on the free plan in
-Singapore. It deploys automatically from this repository’s `main` branch.
+Singapore. It deploys this repository’s `main` branch. The service was created
+from a public Git repository URL, so future code changes require Render’s
+**Manual Deploy** unless a GitHub provider connection is added.
+[Render’s deploy documentation](https://render.com/docs/deploys) distinguishes
+public-URL services from provider-connected automatic deployments.
 GitHub source hosting and the running Python service are separate.
 
 The public HTTPS acceptance checks passed: home page and assets, the original
@@ -96,7 +100,11 @@ available for rollback. Do not rewrite old commit dates or history.
 
 The current service is `pca-dimension-reduction` on Render’s free plan.
 It uses Python 3.12.11, one Gunicorn worker and two threads. The running URL is
-listed above and in the README. Automatic deployment follows `main`.
+listed above and in the README. For later code updates, select **Manual Deploy →
+Deploy latest commit** in Render. Push-triggered deployments require a connected
+GitHub provider; the `autoDeploy` setting alone is not proof that a public-URL
+service receives push events. Documentation-only commits do not require an app
+redeploy when the application code is unchanged.
 
 A free service can sleep after 15 idle minutes and take about a minute to
 restart. This is a demo, not an always-on production service. See

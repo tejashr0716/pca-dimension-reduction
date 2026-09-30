@@ -24,8 +24,8 @@
     "sha256": "e934535ccbb91b503abd17a48e344941915a26300f39b83b4394912e5e614a9b"
   },
   "docs/DEPLOYMENT.md": {
-    "bytes": 6471,
-    "sha256": "4abe9d52886a32ad3358ea41d449c8afc0d3479915be2b5fb86a80ef0b24f41b"
+    "bytes": 7066,
+    "sha256": "00f655cf5f49a51e3f512a37dbaa5ab4fbad31528152ada1e7be2f4773528edd"
   },
   "docs/INTERVIEW_GUIDE.md": {
     "bytes": 14653,
@@ -48,8 +48,8 @@
     "sha256": "2788d7ebd4ba2b6b7e72ecd1a4a3a0fbf19ad118b019851b347ce6f8823d7f18"
   },
   "docs/publication.json": {
-    "bytes": 1504,
-    "sha256": "4c8656711ef68a66d8d1203f89b98af0cea3656fe6488fea190516c1c2ef89c3"
+    "bytes": 1718,
+    "sha256": "c824378f4074bd57c5b07ec4e84bd066d93ef67f7dd72a436e9afaaa869d515e"
   },
   "docs/verification.json": {
     "bytes": 714,
