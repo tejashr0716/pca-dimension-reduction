@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 .DS_Store
 .env
+.pytest_cache/
+.ruff_cache/
+artifacts/
+playwright-results/

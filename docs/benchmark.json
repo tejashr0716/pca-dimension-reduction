@@ -1,0 +1,76 @@
+{
+  "source": "Repository's original seed-42 synthetic correlated CSV; not real-world data",
+  "source_path": "sample_100d_data.csv",
+  "original_repository_commit": "63eeaace8a95c894e8cc524526c61ee1bd2f11bf",
+  "source_sha256": "229e58d12930d1583ce5440d7e84ace3ebe0405c6f389e29c5d347ec37d3a7fe",
+  "recipe": {
+    "seed": 42,
+    "rows": 2000,
+    "features": 100,
+    "latent_factors": 12,
+    "noise_standard_deviation": 0.18,
+    "missing_cells": 80
+  },
+  "input_shape": [
+    2000,
+    100
+  ],
+  "output_shape": [
+    1921,
+    12
+  ],
+  "processed_rows": 1921,
+  "dropped_rows": 79,
+  "retained_variance_percent": 99.7189717359857,
+  "retained_variance_percent_rounded_for_resume": 99.7,
+  "independent_covariance_percent": 99.71897173598569,
+  "absolute_check_difference_percentage_points": 1.4210854715202004e-14,
+  "standardized_reconstruction_mse": 0.0028102826401427924,
+  "variance_by_component": [
+    13.410734893993329,
+    11.166102945464248,
+    10.997205113453887,
+    9.803922651253664,
+    9.091560660763589,
+    8.691040238181992,
+    7.661840401341219,
+    6.9529767623135275,
+    6.156786124075657,
+    5.994710680844166,
+    5.13592409728449,
+    4.656167167015935
+  ],
+  "cumulative_variance_percent": [
+    13.410734893993329,
+    24.57683783945758,
+    35.57404295291147,
+    45.377965604165134,
+    54.469526264928724,
+    63.160566503110715,
+    70.82240690445194,
+    77.77538366676546,
+    83.93216979084112,
+    89.92688047168528,
+    95.06280456896977,
+    99.7189717359857
+  ],
+  "api_upload_download_verified": true,
+  "pipeline_duration_ms_this_machine_only": 180.89215600002717,
+  "runtime": {
+    "python": "3.13.14",
+    "packages": {
+      "Flask": "3.1.2",
+      "Werkzeug": "3.1.3",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "scikit-learn": "1.7.2",
+      "scipy": "1.18.1"
+    }
+  },
+  "limitations": [
+    "Variance is measured after scaling and dropping non-finite rows.",
+    "Twelve latent factors make this synthetic dataset favorable to twelve PCA components.",
+    "This is not classification accuracy, predictive quality or a universal CSV guarantee.",
+    "The elapsed time is one local run, not a deployment SLA or load-test result."
+  ]
+}

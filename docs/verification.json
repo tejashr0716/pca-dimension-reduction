@@ -1,0 +1,24 @@
+{
+  "verified_at_utc": "2026-09-30T14:32:05.912987+00:00",
+  "pytest": {
+    "tests": 73,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "browser_checks_passed": 13,
+  "browser": "local Chromium",
+  "viewports_checked": [
+    "1280px desktop",
+    "390px mobile"
+  ],
+  "light_and_dark_modes_checked": true,
+  "ruff_check": "passed",
+  "ruff_format_check": "passed",
+  "pip_check": "passed",
+  "benchmark_evidence": "docs/benchmark.json",
+  "github_updated": false,
+  "live_deployment_updated": false,
+  "github_write_blocker": "403 Resource not accessible by personal access token",
+  "record_scope": "Local QA snapshot before source publication; current publication status is in publication.json"
+}

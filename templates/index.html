@@ -3,131 +3,129 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PCA Dimension Reduction Pipeline</title>
+  <meta name="description" content="An explainable CSV-to-PCA pipeline with real variance metrics and reproducible evidence.">
+  <title>PCA Lab — CSV Dimensionality Reduction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='chart-base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script defer src="{{ url_for('static', filename='vendor/chart.umd.min.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='chart-runtime.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
 </head>
 <body>
-  <main class="page-shell">
-    <section class="hero">
-      <p class="eyebrow">Data preprocessing workspace</p>
-      <h1>Dimensionality Reduction <span>&amp; Data Pipeline</span></h1>
-      <p class="hero-copy">Upload a CSV, clean its numeric features, standardize the data, and explore a PCA-reduced dataset.</p>
-    </section>
+  <a class="skip-link" href="#workspace">Skip to workspace</a>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="PCA Lab home"><span class="brand-mark" aria-hidden="true">P</span>PCA<span class="brand-light">LAB</span></a>
+      <nav aria-label="Main navigation">
+        <a href="#method">How it works</a>
+        <a href="https://github.com/tejashr0716/pca-dimension-reduction" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </nav>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">CSV DIMENSIONALITY REDUCTION</p>
+        <h1 id="hero-title">Less data.<br><span>Same signal?</span></h1>
+        <p class="hero-copy">Find out how much variance survives. Upload numeric data, reduce it to principal components, and inspect every step.</p>
+        <div class="hero-foot"><span class="dot" aria-hidden="true"></span>Python · Flask · scikit-learn · Chart.js</div>
+      </section>
 
-    <section class="panel control-panel" aria-labelledby="run-title">
-      <div>
-        <p class="section-label">Input</p>
-        <h2 id="run-title">Run PCA analysis</h2>
-      </div>
-      <form id="analysis-form">
-        <label class="file-picker" for="csv-file">
-          <input id="csv-file" name="file" type="file" accept=".csv,text/csv" required>
-          <span class="file-icon">↑</span>
-          <span><strong>Choose a CSV dataset</strong><small id="file-name">Maximum file size: 50 MB</small></span>
-        </label>
-        <label class="component-field" for="components">
-          PCA components
-          <input id="components" name="components" type="number" min="1" value="10" required>
-        </label>
-        <button id="run-button" type="submit">Run PCA <span>→</span></button>
-      </form>
-      <p id="status" class="status" role="status">Choose a CSV file to begin.</p>
-    </section>
+      <section id="workspace" class="workspace" aria-label="PCA workspace">
+        <aside class="input-card">
+          <div class="section-heading"><p class="eyebrow">01 / INPUT</p><button id="reset-button" type="button" class="text-button">Reset</button></div>
+          <h2>Start with a dataset.</h2>
+          <p class="muted">UTF-8 CSV with a header row. Numeric columns only; text columns are reported and skipped.</p>
+          <form id="analysis-form" data-upload-limit="{{ upload_limit_bytes }}">
+            <div id="drop-zone" class="drop-zone">
+              <span class="upload-mark" aria-hidden="true">↑</span>
+              <label id="csv-label" for="csv-file"><strong>Choose a CSV</strong><span>or drag and drop it here</span></label>
+              <input id="csv-file" name="file" type="file" accept=".csv,text/csv" aria-describedby="file-description">
+              <p id="file-description" class="small">Up to {{ upload_limit_mb|int }} MB per request, including upload overhead</p>
+            </div>
+            <p id="selected-file" class="selected-file" hidden></p>
+            <label class="field-label" for="components">Principal components</label>
+            <div class="component-control">
+              <input id="components" name="components" type="number" min="1" max="500" step="1" value="12" required aria-describedby="component-help">
+              <span>output dimensions</span>
+            </div>
+            <p id="component-help" class="small">Maximum: the smaller of usable features and complete rows minus one.</p>
+            <button id="run-button" type="submit" class="primary-button">Run PCA <span aria-hidden="true">→</span></button>
+          </form>
+          <div class="divider-label"><span>or explore the benchmark</span></div>
+          <button id="demo-button" type="button" class="secondary-button">Try the 100-feature sample</button>
+          <p class="small sample-note">2,000 generated rows · 12 latent factors<br>Seed 42 · measured, not hard-coded</p>
+          <div id="status" class="status" role="status" aria-live="polite">Ready when you are.</div>
+          <p id="error" class="error-box" role="alert" hidden></p>
+          <p class="privacy-note">Demo limits: 50,000 rows, 500 columns, 2 million cells. Avoid sensitive data. Reduced results are cached in server memory for up to 15 minutes, and may expire earlier.</p>
+        </aside>
 
-    <section id="results" class="results hidden" aria-live="polite">
-      <div class="section-heading">
-        <div><p class="section-label">Analysis output</p><h2>Pipeline results</h2></div>
-        <a id="download-button" class="download-button" href="#" download>Download reduced CSV ↓</a>
-      </div>
-      <div class="metrics-grid">
-        <article class="metric"><span>Original Features</span><strong id="original-features">—</strong></article>
-        <article class="metric"><span>Reduced Features</span><strong id="reduced-features">—</strong></article>
-        <article class="metric"><span>Variance Retained</span><strong id="variance-retained">—</strong></article>
-        <article class="metric"><span>Processing Time</span><strong id="processing-time">—</strong></article>
-        <article class="metric"><span>Rows Received</span><strong id="rows-received">—</strong></article>
-        <article class="metric"><span>Rows Processed</span><strong id="rows-processed">—</strong></article>
-        <article class="metric"><span>Missing Values Removed</span><strong id="missing-values">—</strong></article>
-      </div>
-      <div class="data-grid">
-        <section class="panel chart-panel"><h3>Explained variance by component</h3><canvas id="variance-chart"></canvas></section>
-        <section class="panel preview-panel"><h3>Transformed dataset preview</h3><div class="table-wrap"><table id="preview-table"></table></div></section>
-      </div>
-    </section>
-  </main>
+        <div class="output-column">
+          <section id="empty-state" class="empty-state">
+            <p class="eyebrow">02 / OUTPUT</p>
+            <div class="empty-art" aria-hidden="true"><span>CSV</span><i>→</i><span>PCA</span></div>
+            <h2>Your data, distilled.</h2>
+            <p>Run an analysis to see retained variance, cleaning decisions, component weights, and a downloadable reduced dataset.</p>
+            <ol class="pipeline-strip" aria-label="Processing steps">
+              <li><span>1</span>Validate</li><li><span>2</span>Clean</li><li><span>3</span>Scale</li><li><span>4</span>Reduce</li>
+            </ol>
+            <p class="empty-note">No preset scores. Every result is computed from the uploaded file.</p>
+          </section>
 
-  <script>
-    const form = document.getElementById('analysis-form');
-    const fileInput = document.getElementById('csv-file');
-    const fileName = document.getElementById('file-name');
-    const statusText = document.getElementById('status');
-    const runButton = document.getElementById('run-button');
-    const results = document.getElementById('results');
-    let varianceChart;
+          <section id="results" hidden aria-labelledby="results-title">
+            <div class="result-heading">
+              <div><p class="eyebrow">02 / OUTPUT</p><h2 id="results-title">Analysis results</h2><p id="result-file" class="small"></p></div>
+              <button id="download-button" type="button" class="secondary-button">Download CSV ↓</button>
+            </div>
+            <div class="metrics">
+              <div><span>Numeric features used</span><strong id="input-features">—</strong></div>
+              <div><span>Principal components</span><strong id="output-features">—</strong></div>
+              <div class="metric-accent"><span>Variance retained</span><strong id="variance-retained">—</strong></div>
+              <div><span>Complete rows used</span><strong id="rows-used">—</strong></div>
+            </div>
+            <div class="card chart-card">
+              <div class="chart-heading"><h3>Where the variance lives</h3><div class="view-controls" role="group" aria-label="Variance chart view"><button class="view-button" data-view="individual" aria-pressed="true" type="button">Per component</button><button class="view-button" data-view="cumulative" aria-pressed="false" type="button">Cumulative</button></div></div>
+              <p id="chart-context" class="small"></p>
+              <p id="chart-summary" class="sr-only"></p>
+              <div class="chart-wrap">
+                <canvas id="variance-chart" role="img" aria-label="Variance chart">Exact values are available in the variance table below.</canvas>
+                <div class="chart-tooltip" role="tooltip" aria-hidden="true"></div>
+              </div>
+              <p id="chart-fallback" class="error-box" hidden>Chart unavailable. The analysis and download still work; use the exact variance table below.</p>
+              <details id="variance-details"><summary>Exact variance values</summary><div class="table-scroll" tabindex="0" role="region" aria-label="Variance values"><table id="variance-table"></table></div></details>
+              <p class="small chart-footnote">Variance is measured on standardized numeric data, not prediction accuracy.</p>
+            </div>
 
-    fileInput.addEventListener('change', () => {
-      fileName.textContent = fileInput.files[0] ? fileInput.files[0].name : 'Maximum file size: 50 MB';
-    });
+            <div class="card preprocessing-card">
+              <div class="section-heading"><h3>Preprocessing audit</h3><span id="processing-time" class="small"></span></div>
+              <p id="row-summary"></p>
+              <div class="audit-grid"><div><span>Missing cells</span><strong id="missing-cells"></strong></div><div><span>Infinite cells</span><strong id="infinite-cells"></strong></div><div><span>Rows dropped</span><strong id="rows-dropped"></strong></div></div>
+              <p id="column-summary" class="small"></p>
+              <p class="small">StandardScaler → full-SVD PCA · no whitening · no value imputation</p>
+            </div>
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const file = fileInput.files[0];
-      if (!file) { setStatus('Select a CSV file first.', true); return; }
-      runButton.disabled = true;
-      runButton.innerHTML = 'Processing…';
-      setStatus('Cleaning numeric features and running PCA…');
-      try {
-        const response = await fetch('/api/analyze', { method: 'POST', body: new FormData(form) });
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload.error || 'Analysis could not be completed.');
-        renderResults(payload);
-        setStatus('Analysis completed successfully. Your reduced CSV is ready to download.');
-      } catch (error) {
-        results.classList.add('hidden');
-        setStatus(error.message, true);
-      } finally {
-        runButton.disabled = false;
-        runButton.innerHTML = 'Run PCA <span>→</span>';
-      }
-    });
+            <div class="card preview-card">
+              <h3>Reduced data preview</h3>
+              <p class="small">First 10 complete rows, rounded for display. The CSV contains every retained row and full-precision scores.</p>
+              <div class="table-scroll" tabindex="0" role="region" aria-label="Reduced data preview"><table id="preview-table"></table></div>
+            </div>
+            <details class="card loading-card"><summary>What do the components mean?</summary><p class="small">Each PC is a weighted combination of standardized features—not one selected original feature. Below are the five largest absolute weights for the first three components. Weight signs can flip without changing the solution.</p><div id="loadings"></div></details>
+          </section>
+        </div>
+      </section>
 
-    function setStatus(message, isError = false) {
-      statusText.textContent = message;
-      statusText.classList.toggle('error', isError);
-    }
-
-    function renderResults(data) {
-      const values = {
-        'original-features': data.original_features,
-        'reduced-features': data.reduced_features,
-        'variance-retained': `${data.explained_variance_percent.toFixed(2)}%`,
-        'processing-time': `${data.processing_time_ms.toFixed(2)} ms`,
-        'rows-received': data.original_rows.toLocaleString(),
-        'rows-processed': data.processed_rows.toLocaleString(),
-        'missing-values': data.missing_values_removed.toLocaleString()
-      };
-      Object.entries(values).forEach(([id, value]) => document.getElementById(id).textContent = value);
-      document.getElementById('download-button').href = `/api/download?analysis_id=${encodeURIComponent(data.analysis_id)}`;
-      renderChart(data.variance_by_component);
-      renderPreview(data.preview);
-      results.classList.remove('hidden');
-      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function renderChart(variance) {
-      if (varianceChart) varianceChart.destroy();
-      varianceChart = new Chart(document.getElementById('variance-chart'), {
-        type: 'bar',
-        data: { labels: variance.map((_, index) => `PC ${index + 1}`), datasets: [{ label: 'Explained variance (%)', data: variance, backgroundColor: '#67e8c6', borderRadius: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Variance (%)' } }, x: { grid: { display: false } } } }
-      });
-    }
-
-    function renderPreview(rows) {
-      const table = document.getElementById('preview-table');
-      const columns = rows.length ? Object.keys(rows[0]) : [];
-      table.innerHTML = `<thead><tr>${columns.map(column => `<th>${column}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${columns.map(column => `<td>${Number(row[column]).toFixed(5)}</td>`).join('')}</tr>`).join('')}</tbody>`;
-    }
-  </script>
+      <section id="method" class="method" aria-labelledby="method-title">
+        <p class="eyebrow">THE METHOD</p>
+        <h2 id="method-title">A small pipeline. Clear decisions.</h2>
+        <div class="method-grid">
+          <div><span class="method-number">01</span><h3>Validate &amp; clean</h3><p>Check the CSV and component count. Select numeric features, drop incomplete rows, remove constant columns, and report what changed.</p></div>
+          <div><span class="method-number">02</span><h3>Put features on equal footing</h3><p>Subtract each feature’s mean and divide by its standard deviation so units alone do not dominate the result.</p></div>
+          <div><span class="method-number">03</span><h3>Find principal directions</h3><p>Full SVD finds orthogonal directions ordered by explained variance. Project rows into the selected component space.</p></div>
+          <div><span class="method-number">04</span><h3>Measure what remains</h3><p>Inspect explained and cumulative variance, then download the scores. Fewer components means less data—and potentially lost signal.</p></div>
+        </div>
+        <div class="method-caveat"><strong>About the 99.7% benchmark.</strong> The sample deliberately has 12 latent factors across 100 correlated features. Its measured result is favorable to PCA; arbitrary CSVs may retain much less variance with 12 components.</div>
+      </section>
+    </main>
+    <footer><span>Built by Tejas HR</span><span>Explainable processing. Reproducible evidence.</span></footer>
+  </div>
+  <noscript><p class="error-box">Enable JavaScript to upload datasets and run the interactive PCA analysis.</p></noscript>
 </body>
 </html>

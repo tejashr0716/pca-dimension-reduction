@@ -1,0 +1,48 @@
+{
+  "checks": [
+    "Initial state: no fake result metrics",
+    "Real sample upload: DOM metrics agree with independently verified evidence",
+    "Component variance plot: data identity, zero baseline and runtime audit",
+    "First/middle/last tooltips: exact component heading and correctly formatted percent",
+    "Cumulative view: actual cumsum values, 0–100 percent scale and runtime audit",
+    "Real browser download: 1,921 rows and 12 principal-component columns",
+    "Expanded variance, score preview and component-loading disclosures",
+    "390px responsive result: no page-level horizontal overflow and passing chart audit",
+    "Dark-mode chart rerender keeps data identity and audit",
+    "Expired-download response produces a visible, recoverable error",
+    "Malformed upload: real server error shown, stale results hidden, controls recovered",
+    "Unavailable chart library: numerical analysis survives with a visible table fallback",
+    "No unhandled JavaScript exceptions"
+  ],
+  "tooltip_samples": [
+    {
+      "component": "PC 1",
+      "text": "13.41%"
+    },
+    {
+      "component": "PC 6",
+      "text": "8.69%"
+    },
+    {
+      "component": "PC 12",
+      "text": "4.66%"
+    }
+  ],
+  "screenshots": [
+    "results-desktop.png",
+    "results-cumulative.png",
+    "results-mobile.png",
+    "results-dark.png",
+    "error-desktop.png",
+    "error-mobile.png"
+  ],
+  "page_errors": [],
+  "api_benchmark": {
+    "input_features": 100,
+    "components": 12,
+    "received_rows": 2000,
+    "complete_rows": 1921,
+    "retained_variance_percent": 99.7189717359857
+  },
+  "status": "passed"
+}

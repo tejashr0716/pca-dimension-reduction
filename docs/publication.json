@@ -1,0 +1,10 @@
+{
+  "repository_url": "https://github.com/tejashr0716/pca-dimension-reduction",
+  "published_branch": "main",
+  "original_commit": "63eeaace8a95c894e8cc524526c61ee1bd2f11bf",
+  "original_version_branch": "backup/pre-pca-rebuild-2026-09-30",
+  "source_status": "Rebuilt source publication",
+  "live_demo_url": null,
+  "deployment_status": "Pending Python hosting deployment",
+  "local_verification": "docs/verification.json"
+}
