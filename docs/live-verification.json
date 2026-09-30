@@ -1,0 +1,109 @@
+{
+  "verified_at_utc": "2026-09-30T15:17:26.447386+00:00",
+  "base_url": "https://pca-dimension-reduction.onrender.com",
+  "source_commit": "42518d7dbd341333f6d0559e01445810356d79a8",
+  "status": "passed",
+  "http_checks": [
+    {
+      "name": "Home page",
+      "passed": true
+    },
+    {
+      "name": "Asset /static/style.css",
+      "passed": true
+    },
+    {
+      "name": "Asset /static/app.js",
+      "passed": true
+    },
+    {
+      "name": "Asset /static/vendor/chart.umd.min.js",
+      "passed": true
+    },
+    {
+      "name": "Asset /static/chart-runtime.js",
+      "passed": true
+    },
+    {
+      "name": "Public benchmark CSV",
+      "passed": true
+    },
+    {
+      "name": "Live benchmark analysis",
+      "passed": true,
+      "details": {
+        "schema_version": "1.0",
+        "original_rows": 2000,
+        "processed_rows": 1921,
+        "original_features": 100,
+        "numeric_features_used": 100,
+        "reduced_features": 12,
+        "explained_variance_percent": 99.71897173598569
+      }
+    },
+    {
+      "name": "Reduced CSV download",
+      "passed": true,
+      "details": {
+        "data_rows": 1921,
+        "columns": 12,
+        "attachment": ""
+      }
+    },
+    {
+      "name": "Missing upload",
+      "passed": true,
+      "details": {
+        "http_status": 400,
+        "error_code": "MISSING_FILE"
+      }
+    },
+    {
+      "name": "Wrong file type",
+      "passed": true,
+      "details": {
+        "http_status": 415,
+        "error_code": "INVALID_FILE_TYPE"
+      }
+    },
+    {
+      "name": "Out-of-range components",
+      "passed": true,
+      "details": {
+        "http_status": 422,
+        "error_code": "COMPONENTS_OUT_OF_RANGE"
+      }
+    },
+    {
+      "name": "Malformed CSV",
+      "passed": true,
+      "details": {
+        "http_status": 400,
+        "error_code": "INVALID_CSV"
+      }
+    },
+    {
+      "name": "Non-numeric dataset",
+      "passed": true,
+      "details": {
+        "http_status": 422,
+        "error_code": "NO_NUMERIC_FEATURES"
+      }
+    },
+    {
+      "name": "Missing download ID",
+      "passed": true,
+      "details": {
+        "http_status": 404,
+        "error_code": "RESULT_NOT_FOUND"
+      }
+    }
+  ],
+  "benchmark_request_round_trip_ms": 4639.5,
+  "notes": [
+    "Checks use the public HTTPS service and synthetic benchmark only.",
+    "Reduced download links are temporary per analysis; they are not a fixed project URL.",
+    "Request round-trip timing includes network and is not a performance benchmark."
+  ],
+  "record_scope": "Public HTTPS verification of the initial deployed application; later documentation-only commits do not alter the tested application code."
+}

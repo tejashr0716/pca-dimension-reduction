@@ -12,7 +12,14 @@ downloading the component scores.
 - [Interview guide](docs/INTERVIEW_GUIDE.md)
 - [Benchmark evidence](docs/benchmark.json)
 - [Automated checks](https://github.com/tejashr0716/pca-dimension-reduction/actions/workflows/tests.yml)
-- **Live demo:** deployment pending; a verified public URL will be added here.
+- [Live PCA Lab demo](https://pca-dimension-reduction.onrender.com)
+- [Download the original 100-feature sample CSV](https://pca-dimension-reduction.onrender.com/sample_100d_data.csv)
+- [Public-service verification](docs/live-verification.json)
+
+The demo is hosted on Render’s free plan. After 15 minutes without traffic it
+may sleep; the first request can take about a minute to wake it. Restarts/sleep
+clear temporary analysis results, so rerun the analysis if a download expires.
+See [Render’s free-service limits](https://render.com/docs/free).
 
 ## What is implemented
 

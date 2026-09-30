@@ -12,20 +12,20 @@
     "sha256": "d63bbc9def255c35cdf1edd4c33519b84a943add0568100273456530f64eaeb1"
   },
   "README.md": {
-    "bytes": 5954,
-    "sha256": "365d9832ab35f2e126a3e7c512d5a385c18e70ea2dc8e8d7c586cb3fc63c9635"
+    "bytes": 6428,
+    "sha256": "601b660cef1c7c1a04736b5790b36dc13b3c32f8b94935a07cd68c5c782287f7"
   },
   "START_HERE.md": {
-    "bytes": 1042,
-    "sha256": "78797067c0b2f9f6832a1abba332d27bd11f1ab41faa8b0ba680e5bfe9fadbb9"
+    "bytes": 1107,
+    "sha256": "626336bea440170ccb8d262242cdbcd705cf16bcb66395ecfc91478d1685fd25"
   },
   "app.py": {
     "bytes": 6552,
     "sha256": "e934535ccbb91b503abd17a48e344941915a26300f39b83b4394912e5e614a9b"
   },
   "docs/DEPLOYMENT.md": {
-    "bytes": 5698,
-    "sha256": "5e8d44100ee625b8f4bfa44c684622f308f6f8a0c8e883ee168f85b1cd6fa1f3"
+    "bytes": 6471,
+    "sha256": "4abe9d52886a32ad3358ea41d449c8afc0d3479915be2b5fb86a80ef0b24f41b"
   },
   "docs/INTERVIEW_GUIDE.md": {
     "bytes": 14653,
@@ -43,9 +43,13 @@
     "bytes": 1617,
     "sha256": "4491500607986270f4a2cdcf0afc04b11e5eb70a11c107a42c8373c23eb26eb9"
   },
+  "docs/live-verification.json": {
+    "bytes": 2686,
+    "sha256": "2788d7ebd4ba2b6b7e72ecd1a4a3a0fbf19ad118b019851b347ce6f8823d7f18"
+  },
   "docs/publication.json": {
-    "bytes": 426,
-    "sha256": "7710fc11e5ba8b1c3a69abd86bdad95e463c8d43134aa6dda1abe91475b29c3f"
+    "bytes": 1504,
+    "sha256": "4c8656711ef68a66d8d1203f89b98af0cea3656fe6488fea190516c1c2ef89c3"
   },
   "docs/verification.json": {
     "bytes": 714,

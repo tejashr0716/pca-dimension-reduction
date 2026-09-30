@@ -2,9 +2,15 @@
 
 ## Source publication and live deployment
 
-The rebuilt source is published in this repository. A live Flask website is
-separate from GitHub source hosting; use the verified demo link in `README.md`
-when deployment is complete. Never treat a GitHub file preview as the running app.
+The rebuilt source is published on `main`. The running Flask app is
+[PCA Lab](https://pca-dimension-reduction.onrender.com), hosted by Render on the free plan in
+Singapore. It deploys automatically from this repository’s `main` branch.
+GitHub source hosting and the running Python service are separate.
+
+The public HTTPS acceptance checks passed: home page and assets, the original
+benchmark CSV, real analysis, reduced CSV download and representative input
+errors. See `docs/live-verification.json`. GitHub Actions also passed on Python
+3.11, 3.12 and 3.13.
 
 The original version is preserved at branch
 `backup/pre-pca-rebuild-2026-09-30`, commit
@@ -53,9 +59,11 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/gunicorn -c gunicorn.conf.py 
 
 Gunicorn defaults to port 8000; hosting providers can supply `PORT`.
 
-## Put the rebuild in the existing repository
+## Make future replacements safely
 
-Use a fresh clone to avoid accidentally overwriting unrelated local work:
+The initial rebuild is already published; these are maintenance instructions,
+not remaining setup steps. Use a fresh clone to avoid overwriting unrelated
+local work:
 
 ```bash
 git clone https://github.com/tejashr0716/pca-dimension-reduction.git pca-replacement
@@ -86,8 +94,13 @@ available for rollback. Do not rewrite old commit dates or history.
 
 ## Hosting
 
-The existing repository did not identify a live host. The exact replacement
-steps depend on which service currently runs it.
+The current service is `pca-dimension-reduction` on Render’s free plan.
+It uses Python 3.12.11, one Gunicorn worker and two threads. The running URL is
+listed above and in the README. Automatic deployment follows `main`.
+
+A free service can sleep after 15 idle minutes and take about a minute to
+restart. This is a demo, not an always-on production service. See
+[Render’s free-service documentation](https://render.com/docs/free).
 
 ### Existing deployment
 
@@ -106,7 +119,7 @@ MKL_NUM_THREADS=1
 Merge the reviewed rebuild, redeploy through the host, and run the live
 acceptance checklist below. Do not delete the old service first.
 
-### Optional new Render service
+### Recreate the Render service if needed
 
 `render.yaml` is a starting configuration for a Python web service. In Render,
 connect the repository, choose the reviewed branch and use the build/start
@@ -114,8 +127,9 @@ commands above (or a Blueprint from the YAML). The configuration requests a
 free plan; provider availability, limits and pricing can change. Check them
 in your account. Do not provision a paid plan without intending to do so.
 
-This file does not mean deployment has already happened. It is also not an
-automatic migration of an existing service to a new URL.
+A service has now been created and verified at the URL above. The YAML remains
+a reproducible starting point; it does not automatically migrate another
+existing service or its URL.
 
 ### Critical single-worker limitation
 

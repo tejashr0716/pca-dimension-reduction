@@ -1,10 +1,38 @@
 {
   "repository_url": "https://github.com/tejashr0716/pca-dimension-reduction",
   "published_branch": "main",
+  "application_source_commit": "42518d7dbd341333f6d0559e01445810356d79a8",
   "original_commit": "63eeaace8a95c894e8cc524526c61ee1bd2f11bf",
   "original_version_branch": "backup/pre-pca-rebuild-2026-09-30",
-  "source_status": "Rebuilt source publication",
-  "live_demo_url": null,
-  "deployment_status": "Pending Python hosting deployment",
-  "local_verification": "docs/verification.json"
+  "source_status": "Published",
+  "live_demo_url": "https://pca-dimension-reduction.onrender.com",
+  "sample_csv_url": "https://pca-dimension-reduction.onrender.com/sample_100d_data.csv",
+  "deployment_status": "Live; public HTTPS acceptance checks passed",
+  "hosting": {
+    "provider": "Render",
+    "plan": "free",
+    "region": "singapore",
+    "python_version": "3.12.11",
+    "gunicorn_workers": 1,
+    "gunicorn_threads": 2,
+    "auto_deploy_branch": "main"
+  },
+  "verified_at_utc": "2026-09-30T15:17:26.447386+00:00",
+  "live_checks_passed": 14,
+  "live_verification": "docs/live-verification.json",
+  "local_verification": "docs/verification.json",
+  "ci": {
+    "status": "success",
+    "python_versions": [
+      "3.11",
+      "3.12",
+      "3.13"
+    ],
+    "run_url": "https://github.com/tejashr0716/pca-dimension-reduction/actions/runs/36732821360"
+  },
+  "limitations": [
+    "Free-service cold starts can take about a minute after idle sleep.",
+    "Analysis results are temporary, process-local and erased by sleep/restarts.",
+    "Variance retention is measured on standardized synthetic benchmark data, not predictive accuracy or a promise for arbitrary CSVs."
+  ]
 }
